@@ -1,0 +1,6 @@
+@MiddlewareSandbox_HostAddress = http://localhost:5293
+
+GET {{MiddlewareSandbox_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

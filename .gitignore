@@ -1,0 +1,50 @@
+# Build Folders
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.vsp
+*.vspscc
+
+# Rider IDE
+.idea/
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# ASP.NET Temporary files
+App_Data/
+App_Offline.htm
+
+# Publish output
+*.Publish.xml
+*.deploy
+*.deploy.cmd
+*.dbmdl
+
+# IIS Express
+iisexpress/
+*.vsix
+*.log
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Others
+*.bak
+*.swp
+*.scc
