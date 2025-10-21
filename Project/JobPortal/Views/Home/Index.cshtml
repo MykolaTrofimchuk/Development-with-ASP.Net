@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model JobPortal.Models.ViewModels.UsersListViewModel
+
+<h2 class="mb-4">Список користувачів</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-primary">
+        <tr>
+            <th>Ім’я</th>
+            <th>Email</th>
+            <th>Роль</th>
+            <th>Дата створення</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>@user.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= Model.PagingInfo.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PagingInfo.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>

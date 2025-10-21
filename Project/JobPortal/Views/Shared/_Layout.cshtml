@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - JobPortal</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/JobPortal.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-white" asp-area="" asp-controller="Home" asp-action="Index">JobPortal</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Головна</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Privacy">Інше</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="flex-grow-1 py-4">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="bg-primary text-white mt-auto py-3">
+        <div class="container text-center small">
+            &copy; 2025 - JobPortal | <a class="text-white text-decoration-underline" asp-controller="Home" asp-action="Privacy">Політика</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
