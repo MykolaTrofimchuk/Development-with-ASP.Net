@@ -1,0 +1,8 @@
+﻿@model JobPortal.Models.User
+
+<tr>
+    <td>@Model.FullName</td>
+    <td>@Model.Email</td>
+    <td>@Model.Role</td>
+    <td>@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+</tr>

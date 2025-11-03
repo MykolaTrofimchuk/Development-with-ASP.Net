@@ -1,0 +1,22 @@
+﻿@model IEnumerable<string>
+@{
+    var selectedRole = ViewBag.SelectedRole as string;
+}
+
+<div class="list-group">
+    <a asp-action="Index"
+       asp-controller="Home"
+       class="list-group-item list-group-item-action @(string.IsNullOrEmpty(selectedRole) ? "active" : "")">
+        Усі користувачі
+    </a>
+
+    @foreach (var role in Model)
+    {
+        <a asp-action="Index"
+           asp-controller="Home"
+           asp-route-role="@role"
+           class="list-group-item list-group-item-action @(role == selectedRole ? "active" : "")">
+            @role
+        </a>
+    }
+</div>

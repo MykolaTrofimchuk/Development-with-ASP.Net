@@ -15,9 +15,16 @@ namespace JobPortal.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(string? role, int page = 1)
         {
-            var usersQuery = _context.Users.OrderBy(u => u.Id);
+            var usersQuery = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                usersQuery = usersQuery.Where(u => u.Role == role);
+            }
+
+            usersQuery = usersQuery.OrderBy(u => u.Id);
 
             var model = new UsersListViewModel
             {
@@ -31,7 +38,9 @@ namespace JobPortal.Controllers
                     CurrentPage = page,
                     ItemsPerPage = PageSize,
                     TotalItems = usersQuery.Count()
-                }
+                },
+
+                CurrentRole = role
             };
 
             return View(model);

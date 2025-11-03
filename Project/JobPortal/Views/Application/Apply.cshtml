@@ -1,0 +1,50 @@
+﻿@model ApplicationForm
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Заявка на вакансію</h4>
+    </div>
+
+    <div class="card-body">
+        <form asp-action="Apply" method="post" class="mb-3">
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label fw-semibold">ПІБ</label>
+                <input asp-for="FullName" class="form-control" placeholder="Введіть ваше повне ім’я" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="example@gmail.com" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Position" class="form-label fw-semibold">Посада</label>
+                <input asp-for="Position" class="form-control" placeholder="На яку посаду подаєтесь" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ResumeText" class="form-label fw-semibold">Резюме</label>
+                <textarea asp-for="ResumeText" class="form-control" rows="4" placeholder="Коротко опишіть досвід роботи..."></textarea>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-outline-primary px-4">
+                    Зберегти у сесії
+                </button>
+
+                <form asp-action="Submit" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-success px-4">
+                        Надіслати
+                    </button>
+                </form>
+            </div>
+        </form>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success mt-4 mb-0 text-center fw-semibold">
+                @ViewBag.Message
+            </div>
+        }
+    </div>
+</div>
