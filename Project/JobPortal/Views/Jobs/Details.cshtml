@@ -1,0 +1,9 @@
+﻿@model Job
+
+<h2>@Model.Title</h2>
+<p><strong>Компанія:</strong> @Model.Company</p>
+<p><strong>Опис:</strong> @Model.Description</p>
+<p><strong>Дата публікації:</strong> @Model.DatePosted.ToShortDateString()</p>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Редагувати</a>
+<a asp-action="Index" class="btn btn-secondary">Назад</a>

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<JobPortal.Models.Application>
+
+<h2 class="mb-3">Заявки</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Додати заявку</a>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-primary">
+        <tr>
+            <th>Ім’я заявника</th>
+            <th>Email</th>
+            <th>Вакансія</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var app in Model)
+        {
+            <tr>
+                <td>@app.FullName</td>
+                <td>@app.Email</td>
+                <td>@app.Job?.Title</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@app.Id" class="btn btn-info btn-sm">Деталі</a>
+                    <a asp-action="Edit" asp-route-id="@app.Id" class="btn btn-warning btn-sm">Редагувати</a>
+                    <a asp-action="Delete" asp-route-id="@app.Id" class="btn btn-danger btn-sm">Видалити</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

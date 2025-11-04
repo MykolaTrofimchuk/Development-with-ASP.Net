@@ -1,0 +1,19 @@
+﻿@model JobPortal.Models.Application
+
+@{
+    ViewData["Title"] = "Видалення заявки";
+}
+
+<h2 class="mb-3">Підтвердження видалення</h2>
+
+<div class="alert alert-warning">
+    Ви дійсно хочете видалити заявку від
+    <strong>@Model.FullName</strong>
+    на вакансію <strong>@Model.Job?.Title</strong>?
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace JobPortal.Models
 {
@@ -25,7 +24,7 @@ namespace JobPortal.Models
                 {
                     FullName = "Іван Петренко",
                     Email = "ivan.petrenko@example.com",
-                    PasswordHash = "12345", // тимчасово, для демо
+                    PasswordHash = "12345",
                     Role = "Employer",
                     CreatedAt = DateTime.UtcNow
                 };
@@ -59,6 +58,74 @@ namespace JobPortal.Models
 
                 context.Users.AddRange(user1, user2, user3, user4);
                 context.SaveChanges();
+            }
+
+            if (!context.Jobs.Any())
+            {
+                var jobs = new[]
+                {
+                    new Job
+                    {
+                        Title = "Frontend Developer",
+                        Company = "TechNova",
+                        Description = "Розробка інтерфейсів на React + TypeScript.",
+                        DatePosted = DateTime.Now.AddDays(-5)
+                    },
+                    new Job
+                    {
+                        Title = "Backend Developer",
+                        Company = "DataCore",
+                        Description = "Розробка REST API на .NET Core, робота з SQL.",
+                        DatePosted = DateTime.Now.AddDays(-3)
+                    },
+                    new Job
+                    {
+                        Title = "Project Manager",
+                        Company = "SoftVision",
+                        Description = "Координація команди, планування спринтів, робота з клієнтами.",
+                        DatePosted = DateTime.Now.AddDays(-1)
+                    }
+                };
+
+                context.Jobs.AddRange(jobs);
+                context.SaveChanges();
+            }
+
+            if (!context.Applications.Any())
+            {
+                var job1 = context.Jobs.FirstOrDefault(j => j.Title == "Frontend Developer");
+                var job2 = context.Jobs.FirstOrDefault(j => j.Title == "Backend Developer");
+
+                var user2 = context.Users.FirstOrDefault(u => u.Email == "maria.savchuk@example.com");
+                var user3 = context.Users.FirstOrDefault(u => u.Email == "oleh.koval@example.com");
+
+                if (job1 != null && job2 != null && user2 != null && user3 != null)
+                {
+                    var applications = new[]
+                    {
+                        new Application
+                        {
+                            JobId = job1.Id,
+                            // UserId = user2.Id,
+                            FullName = "Іван Іваненко",
+                            Email = "ivann@example.com",
+                            ResumeText = "Маю досвід роботи з React та Vue, зацікавлена у вашій вакансії.",
+                            DateApplied = DateTime.Now.AddDays(-2)
+                        },
+                        new Application
+                        {
+                            JobId = job2.Id,
+                            // UserId = user3.Id,
+                            FullName = "Петро Петренко",
+                            Email = "pedro.petrenko@example.com",
+                            ResumeText = "Працював із .NET понад 3 роки, маю досвід із EF Core та SQL Server.",
+                            DateApplied = DateTime.Now.AddDays(-1)
+                        }
+                    };
+
+                    context.Applications.AddRange(applications);
+                    context.SaveChanges();
+                }
             }
         }
     }
