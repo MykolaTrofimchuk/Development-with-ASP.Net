@@ -1,0 +1,27 @@
+﻿@model JobPortal.Models.ViewModels.RegisterViewModel
+
+<h2>Реєстрація</h2>
+
+<form asp-action="Register" method="post">
+    <div asp-validation-summary="All"></div>
+
+    <label>Email</label>
+    <input asp-for="Email" class="form-control" />
+
+    <label>Ім’я користувача</label>
+    <input asp-for="FullName" class="form-control" />
+
+    <label>Хто ви?</label>
+    <select asp-for="Role" class="form-control">
+        <option value="Candidate">Шукач роботи</option>
+        <option value="Employer">Роботодавець</option>
+    </select>
+
+    <label>Пароль</label>
+    <input asp-for="Password" class="form-control" />
+
+    <label>Підтвердження пароля</label>
+    <input asp-for="ConfirmPassword" class="form-control" />
+
+    <button class="btn btn-success mt-3">Зареєструватися</button>
+</form>

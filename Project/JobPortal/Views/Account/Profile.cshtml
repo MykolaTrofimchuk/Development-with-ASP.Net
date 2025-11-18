@@ -1,0 +1,40 @@
+﻿@model JobPortal.Models.ViewModels.ProfileViewModel
+
+<h2 class="mb-4">Особистий кабінет</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h4 class="mb-3">Ваші дані</h4>
+
+        <form asp-action="UpdateProfile" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label">Повне ім’я</label>
+                <input asp-for="FullName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Роль</label>
+                <div class="form-control bg-light">@Model.Role</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Дата створення</label>
+                <div class="form-control bg-light">
+                    @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Зберегти зміни</button>
+            <a asp-action="Logout" class="btn btn-danger ms-2">Вийти</a>
+        </form>
+
+    </div>
+</div>

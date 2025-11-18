@@ -1,4 +1,5 @@
 ﻿using JobPortal.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortal.Controllers
@@ -12,10 +13,11 @@ namespace JobPortal.Controllers
             _repository = repo;
         }
 
-        // READ: список
+        // ---------- PUBLIC (доступні всім) ----------
+        [AllowAnonymous]
         public IActionResult Index() => View(_repository.Jobs);
 
-        // READ: деталі
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var job = _repository.GetJobById(id);
@@ -23,13 +25,14 @@ namespace JobPortal.Controllers
             return View(job);
         }
 
-        // CREATE (GET)
+        // ---------- EMPLOYER ONLY ----------
+        [Authorize(Roles = "Employer")]
         public IActionResult Create()
         {
             return View("Edit", new Job());
         }
 
-        // CREATE (POST)
+        [Authorize(Roles = "Employer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Job job)
@@ -42,7 +45,7 @@ namespace JobPortal.Controllers
             return View("Edit", job);
         }
 
-        // UPDATE (GET)
+        [Authorize(Roles = "Employer")]
         public IActionResult Edit(int id)
         {
             var job = _repository.GetJobById(id);
@@ -50,7 +53,7 @@ namespace JobPortal.Controllers
             return View(job);
         }
 
-        // UPDATE (POST)
+        [Authorize(Roles = "Employer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Job job)
@@ -63,7 +66,7 @@ namespace JobPortal.Controllers
             return View(job);
         }
 
-        // DELETE (GET) — підтвердження
+        [Authorize(Roles = "Employer")]
         public IActionResult Delete(int id)
         {
             var job = _repository.GetJobById(id);
@@ -71,7 +74,7 @@ namespace JobPortal.Controllers
             return View(job);
         }
 
-        // DELETE (POST)
+        [Authorize(Roles = "Employer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -81,4 +84,5 @@ namespace JobPortal.Controllers
             return RedirectToAction("Index");
         }
     }
+
 }
