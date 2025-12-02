@@ -1,48 +1,35 @@
 ﻿@page "/login"
-@using BlazorApp_JobPortal.Models
-@using JobPortal.BlazorApp.Services
 @inject AuthService AuthService
-@inject NavigationManager Navigation
+@inject NavigationManager Nav
+@using BlazorApp_JobPortal.Models
+@using JobPortal.BlazorApp.Models
+@using JobPortal.BlazorApp.Services
+@using Microsoft.AspNetCore.Components.Forms
 
 <h3>Вхід</h3>
+@if(Error) { <div class="alert alert-danger">Помилка входу</div> }
 
-@if (ShowAuthError)
-{
-    <div class="alert alert-danger">Неправильний email або пароль</div>
-}
-
-<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+<EditForm Model="model" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
-
     <div class="mb-3">
         <label>Email</label>
-        <InputText @bind-Value="loginModel.Email" class="form-control" />
+        <InputText @bind-Value="model.Email" class="form-control" />
     </div>
-
     <div class="mb-3">
         <label>Пароль</label>
-        <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+        <InputText @bind-Value="model.Password" type="password" class="form-control" />
     </div>
-
-    <button type="submit" class="btn btn-primary">Увійти</button>
+    <button class="btn btn-primary">Увійти</button>
 </EditForm>
 
 @code {
-    private LoginDto loginModel = new LoginDto();
-    private bool ShowAuthError = false;
+    LoginDto model = new();
+    bool Error;
 
-    private async Task HandleLogin()
+    async Task HandleLogin()
     {
-        ShowAuthError = false;
-        var result = await AuthService.Login(loginModel);
-
-        if (result)
-        {
-            Navigation.NavigateTo("/");
-        }
-        else
-        {
-            ShowAuthError = true;
-        }
+        var result = await AuthService.Login(model);
+        if (result) Nav.NavigateTo("/jobs");
+        else Error = true;
     }
 }

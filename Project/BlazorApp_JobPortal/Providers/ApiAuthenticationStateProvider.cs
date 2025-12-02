@@ -1,9 +1,8 @@
-﻿
-using System.Security.Claims;
-using System.Net.Http.Headers;
-using System.Text.Json;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Blazored.LocalStorage;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace JobPortal.BlazorApp.Providers
 {
@@ -20,23 +19,20 @@ namespace JobPortal.BlazorApp.Providers
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            // 1. Шукаємо токен у сховищі
             var token = await _localStorage.GetItemAsync<string>("authToken");
 
             if (string.IsNullOrWhiteSpace(token))
             {
-                // Токена немає — користувач анонімний
+                // Немає токена -> Анонім
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
-            // 2. Якщо токен є — додаємо його до заголовків HTTP для майбутніх запитів
+            // Є токен -> Встановлюємо його в заголовок HTTP для майбутніх запитів
             _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // 3. Парсимо claims (ролі, ім'я) з токена і створюємо користувача
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt")));
         }
 
-        // Викликаємо цей метод після успішного логіну
         public void MarkUserAsAuthenticated(string token)
         {
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
@@ -44,7 +40,6 @@ namespace JobPortal.BlazorApp.Providers
             NotifyAuthenticationStateChanged(authState);
         }
 
-        // Викликаємо цей метод при виході (Logout)
         public void MarkUserAsLoggedOut()
         {
             var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
@@ -52,12 +47,13 @@ namespace JobPortal.BlazorApp.Providers
             NotifyAuthenticationStateChanged(authState);
         }
 
-        // Допоміжний метод для розшифровки JWT (без зовнішніх бібліотек)
+        // Парсинг JWT (технічний метод)
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+
             return keyValuePairs!.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()!));
         }
 
