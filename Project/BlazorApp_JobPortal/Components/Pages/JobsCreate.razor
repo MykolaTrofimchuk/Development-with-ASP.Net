@@ -1,0 +1,64 @@
+﻿@page "/jobs/create"
+@using JobPortal.BlazorApp.Models
+@using JobPortal.BlazorApp.Services
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@inject JobsService JobsService
+@inject NavigationManager nav
+
+<h3>Створення вакансії</h3>
+
+<EditForm Model="job" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Назва вакансії</label>
+        <InputText class="form-control" @bind-Value="job.Title" />
+        <ValidationMessage For="@(() => job.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Компанія</label>
+        <InputText class="form-control" @bind-Value="job.Company" />
+        <ValidationMessage For="@(() => job.Company)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Опис</label>
+        <InputTextArea class="form-control" @bind-Value="job.Description" rows="4" />
+        <ValidationMessage For="@(() => job.Description)" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Зберегти</button>
+</EditForm>
+
+@code {
+    JobCreateModel job = new();
+
+    class JobCreateModel
+    {
+        [Required(ErrorMessage = "Назва обов'язкова")]
+        [MinLength(3, ErrorMessage = "Мінімум 3 символи")]
+        public string Title { get; set; }
+
+        [Required(ErrorMessage = "Опис обов'язковий")]
+        public string Description { get; set; }
+
+        [Required(ErrorMessage = "Назва компанії обов'язкова")]
+        public string Company { get; set; }
+    }
+
+    async Task Save()
+    {
+        var jobDto = new JobDto
+            {
+                Title = job.Title,
+                Description = job.Description,
+                Company = job.Company
+            };
+
+        await JobsService.CreateJob(jobDto);
+        nav.NavigateTo("/jobs");
+    }
+}

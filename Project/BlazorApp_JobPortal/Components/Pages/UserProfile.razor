@@ -1,0 +1,51 @@
+﻿@page "/profile"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Мій профіль</h3>
+
+<AuthorizeView>
+    <Authorized>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@context.User.Identity?.Name</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Користувач системи</h6>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Email:</strong> @userEmail
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Роль:</strong> @userRole
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning">
+            Ви не авторизовані. Будь ласка, <a href="login">увійдіть</a>.
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private string userEmail = "Не вказано";
+    private string userRole = "Не вказано";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            // Шукаємо Email (claim може називатися "email" або стандартним довгим ім'ям)
+            userEmail = user.FindFirst(c => c.Type == ClaimTypes.Email || c.Type == "email")?.Value ?? userEmail;
+
+            // Шукаємо Роль
+            userRole = user.FindFirst(c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value ?? userRole;
+        }
+    }
+}

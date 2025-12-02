@@ -1,0 +1,63 @@
+﻿@page "/jobs/{id:int}"
+@using JobPortal.BlazorApp.Models
+@using JobPortal.BlazorApp.Services
+@inject JobsService JobsService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<h3>Деталі вакансії</h3>
+
+@if (job == null)
+{
+    <p><em>Завантаження...</em></p>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4>@job.Title</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="text-muted">@job.Company</h5>
+            <hr />
+            <p style="white-space: pre-wrap">@job.Description</p>
+       
+        </div>
+        <div class="card-footer">
+            <a href="/jobs/edit/@job.Id" class="btn btn-warning me-2">Редагувати</a>
+            <button class="btn btn-danger" @onclick="DeleteJob">Видалити</button>
+            <a href="/jobs" class="btn btn-secondary float-end">Назад до списку</a>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private JobDto? job;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            job = await JobsService.GetJob(Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteJob()
+    {
+        // Викликаємо стандартне вікно підтвердження браузера
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Ви дійсно хочете видалити вакансію '{job?.Title}'?");
+        
+        if (confirmed)
+        {
+            await JobsService.DeleteJob(Id);
+            Navigation.NavigateTo("/jobs");
+        }
+    }
+}

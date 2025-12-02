@@ -1,0 +1,93 @@
+﻿@page "/jobs"
+@using JobPortal.BlazorApp.Models
+@using JobPortal.BlazorApp.Services
+@using Microsoft.JSInterop
+@inject JobsService JobsService
+@inject IJSRuntime JS
+
+<h3>Вакансії</h3>
+
+@if (jobs == null)
+{
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Завантаження...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="mb-3 text-end">
+        <a href="/jobs/create" class="btn btn-success">
+            <span class="oi oi-plus" aria-hidden="true"></span> Створити нову
+        </a>
+    </div>
+
+    <table class="table table-hover table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Назва</th>
+                <th>Компанія</th>
+                <th style="width: 300px;">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var j in jobs)
+            {
+                <tr>
+                    <td>
+                        <a href="/jobs/@j.Id" class="text-decoration-none fw-bold">
+                            @j.Title
+                        </a>
+                    </td>
+                    <td>@j.Company</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="/jobs/@j.Id" class="btn btn-info btn-sm text-white">
+                                Деталі
+                            </a>
+                            <a href="/jobs/edit/@j.Id" class="btn btn-warning btn-sm">
+                                Редагувати
+                            </a>
+                            <button class="btn btn-danger btn-sm" @onclick="() => Delete(j.Id, j.Title)">
+                                Видалити
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<JobDto>? jobs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJobs();
+    }
+
+    private async Task LoadJobs()
+    {
+        try
+        {
+            jobs = await JobsService.GetJobs();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка завантаження: {ex.Message}");
+        }
+    }
+
+    async Task Delete(int id, string title)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Ви впевнені, що хочете видалити вакансію '{title}'?");
+
+        if (confirmed)
+        {
+            await JobsService.DeleteJob(id);
+            await LoadJobs();
+        }
+    }
+}

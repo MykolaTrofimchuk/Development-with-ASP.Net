@@ -61,6 +61,17 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowBlazorClient",
+                policy =>
+                {
+                    policy.WithOrigins("https://localhost:5288", "http://localhost:5288") 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+        });
+
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())
@@ -92,6 +103,8 @@ internal class Program
                 logger.LogError(ex, "An error occurred while migrating the database.");
             }
         }
+
+        app.UseCors("AllowBlazorClient");
 
         app.UseAuthentication();
         app.UseAuthorization();
