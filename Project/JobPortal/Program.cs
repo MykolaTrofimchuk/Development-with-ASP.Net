@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection.Metadata.Ecma335;
+using JobPortal.Hubs;
 
 namespace JobPortal
 {
@@ -78,6 +79,8 @@ namespace JobPortal
             // Використовуємо AddControllersWithViews для підтримки сторінок
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddSignalR();
+
             // Session
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -114,6 +117,7 @@ namespace JobPortal
             app.MapControllers();
 
             // SeedData.EnsurePopulated(app); // Припускаємо, що SeedData існує
+            app.MapHub<NotificationHub>("/notificationHub");
 
             app.Run();
         }

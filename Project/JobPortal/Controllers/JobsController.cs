@@ -1,16 +1,20 @@
 ﻿using JobPortal.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using JobPortal.Hubs;
 
 namespace JobPortal.Controllers
 {
     public class JobsController : Controller
     {
         private readonly IPortalRepository _repository;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public JobsController(IPortalRepository repo)
+        public JobsController(IPortalRepository repo, IHubContext<NotificationHub> hubContext)
         {
             _repository = repo;
+            _hubContext = hubContext;
         }
 
         // ---------- PUBLIC (доступні всім) ----------
@@ -40,6 +44,10 @@ namespace JobPortal.Controllers
             if (ModelState.IsValid)
             {
                 _repository.CreateJob(job);
+
+                // ВІДПРАВКА СПОВІЩЕННЯ
+                _hubContext.Clients.All.SendAsync("ReceiveJobNotification", job.Title);
+
                 return RedirectToAction("Index");
             }
             return View("Edit", job);
@@ -84,5 +92,4 @@ namespace JobPortal.Controllers
             return RedirectToAction("Index");
         }
     }
-
 }
